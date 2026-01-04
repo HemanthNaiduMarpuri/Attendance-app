@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+
+  <div class="row align-items-center g-5">
+
+    <div class="col-md-6">
+      <h1 class="fw-bold mb-3">
+        Smart Attendance System
+      </h1>
+
+      <p class="text-muted fs-5 mb-4">
+        A modern, user-centric attendance tracking platform designed
+        for students, faculty, and institutions.
+      </p>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'timetable' %}" class="btn btn-primary btn-lg me-2">
+          <i class="bi bi-calendar-week me-1"></i> Go to Timetable
+        </a>
+        <a href="{% url 'logout' %}" class="btn btn-outline-secondary btn-lg">
+          Logout
+        </a>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg me-2">
+          Login
+        </a>
+        <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-lg">
+          Signup
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6 text-center">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png"
+        class="img-fluid"
+        style="max-width:320px"
+        alt="Attendance Illustration">
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

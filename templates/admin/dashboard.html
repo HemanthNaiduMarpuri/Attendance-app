@@ -1,0 +1,21 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">Dashboard</h3>
+
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card shadow-sm p-3">
+      <small class="text-muted">Batches</small>
+      <h4>{{ batch_count }}</h4>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm p-3">
+      <small class="text-muted">Students</small>
+      <h4>{{ student_count }}</h4>
+    </div>
+  </div>
+</div>
+{% endblock %}

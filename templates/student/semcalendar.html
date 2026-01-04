@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}{{ semester.name }} - Attendance Calendar{% endblock %}
+
+{% block extra_css %}
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        background-color: #f5f7fb;
+    }
+
+    .calendar-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .semester-header {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .semester-header h1 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .legend {
+        display: flex;
+        gap: 18px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .legend-color {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .present { background-color: #c8e6c9; }
+    .absent { background-color: #ffcdd2; }
+    .holiday { background-color: #fff9c4; }
+    .leave { background-color: #e1bee7; }
+
+    .calendars-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 30px;
+    }
+
+    .month-calendar {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    }
+
+    .month-header {
+        text-align: center;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 10px;
+    }
+
+    .calendar-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .calendar-table th {
+        background-color: #0d6efd;
+        color: white;
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .calendar-table td {
+        border: 1px solid #e0e0e0;
+        height: 70px;
+        text-align: center;
+        vertical-align: top;
+        padding: 6px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .calendar-table td:hover {
+        background-color: #f1f3f5;
+    }
+
+    .calendar-table td.empty {
+        background-color: #fafafa;
+        cursor: default;
+    }
+
+    .calendar-table td.disabled {
+        background-color: #f5f5f5;
+        color: #bbb;
+        cursor: not-allowed;
+    }
+
+    .day-number {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .status-indicator {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+
+    .present .status-indicator {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .absent .status-indicator {
+        background: #f44336;
+        color: white;
+    }
+
+    .holiday .status-indicator {
+        background: #FFC107;
+        color: #333;
+    }
+
+    .leave .status-indicator {
+        background: #9C27B0;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .calendars-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="calendar-container py-3">
+
+    <!-- Header -->
+    <div class="semester-header">
+        <h1>{{ semester.name }}</h1>
+        <p class="text-muted mb-2">
+            {{ semester.semester_start_date }} – {{ semester.semester_end_date }}
+        </p>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color present"></div>Present</div>
+            <div class="legend-item"><div class="legend-color absent"></div>Absent</div>
+            <div class="legend-item"><div class="legend-color holiday"></div>Holiday</div>
+            <div class="legend-item"><div class="legend-color leave"></div>Leave</div>
+            <div class="legend-item">
+                <div class="legend-color" style="background:#f5f5f5"></div>
+                Outside Semester
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendars -->
+    <div class="calendars-grid">
+        {% for month_data in calendars %}
+        <div class="month-calendar">
+            <div class="month-header">
+                <h2>{{ month_data.month_name }} {{ month_data.year }}</h2>
+            </div>
+
+            <table class="calendar-table">
+                <thead>
+                <tr>
+                    {% for day in days_of_week %}
+                        <th>{{ day }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for week in month_data.calendar %}
+                <tr>
+                    {% for day in week %}
+                        {% if day.day == 0 %}
+                            <td class="empty"></td>
+
+                        {% elif day.disabled %}
+                            <td class="disabled">
+                                <div class="day-number">{{ day.day }}</div>
+                            </td>
+
+                        {% else %}
+                            <td class="{{ day.status }}"
+                                onclick="goToDate('{{ day.date|date:'Y-m-d' }}')">
+                                <div class="day-number">{{ day.day }}</div>
+                                {% if day.status %}
+                                    <span class="status-indicator">
+                                        {{ day.status|upper }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function goToDate(date) {
+        window.location.href = "{% url 'timetable' %}?date=" + date;
+    }
+</script>
+{% endblock %}

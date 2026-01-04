@@ -1,0 +1,60 @@
+{% extends "base_auth.html" %}
+{% block title %}Login{% endblock %}
+
+{% block auth_header %}
+<h4 class="auth-title">Welcome Back</h4>
+<p class="auth-subtitle">Login to continue</p>
+{% endblock %}
+
+{% block content %}
+<form method="post" novalidate>
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label class="form-label">Username</label>
+    {{ form.username }}
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    <div class="input-group">
+      {{ form.password }}
+      <span class="input-group-text" onclick="togglePassword()" style="cursor:pointer">
+        <i class="bi bi-eye" id="toggleIcon"></i>
+      </span>
+    </div>
+  </div>
+
+  {% if form.errors %}
+    <div class="alert alert-danger py-2 small">
+      Invalid username or password
+    </div>
+  {% endif %}
+
+  <button class="btn btn-primary w-100 mt-2">
+    Login
+  </button>
+</form>
+
+<div class="auth-footer mt-3">
+  Don’t have an account?
+  <a href="{% url 'signup' %}">Signup</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function togglePassword() {
+    const input = document.querySelector('input[name="password"]');
+    const icon = document.getElementById('toggleIcon');
+
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.replace("bi-eye", "bi-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.replace("bi-eye-slash", "bi-eye");
+    }
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Timetable{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4>Timetable</h4>
+  <a href="{% url 'timetable_create' %}" class="btn btn-primary btn-sm">
+    + Add Timetable Entry
+  </a>
+</div>
+
+<div class="card shadow-sm">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Section</th>
+        <th>Day</th>
+        <th>Period</th>
+        <th>Subject</th>
+        <th>Type</th>
+        <th>Span</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in timetables %}
+      <tr>
+        <td>{{ t.section }}</td>
+        <td>{{ t.day }}</td>
+        <td>{{ t.period.period_number }}</td>
+        <td>{{ t.subject }}</td>
+        <td>
+          <span class="badge {% if t.session_type == 'Lab' %}bg-warning{% else %}bg-info{% endif %}">
+            {{ t.session_type }}
+          </span>
+        </td>
+        <td>{{ t.span_count }}</td>
+        <td class="text-end">
+          <a href="{% url 'timetable_update' t.id %}"
+             class="btn btn-outline-secondary btn-sm">Edit</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="text-center text-muted">
+          No timetable entries found
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

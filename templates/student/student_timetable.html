@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}My Timetable{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h4 class="fw-semibold mb-1">My Timetable & Attendance</h4>
+      <small class="text-muted">
+        View and mark attendance for each scheduled session
+      </small>
+    </div>
+
+    <form method="get" class="d-flex align-items-center gap-2">
+      <input type="date"
+             name="date"
+             value="{{ date|date:'Y-m-d' }}"
+             max="{{ today|date:'Y-m-d' }}"
+             class="form-control form-control-sm">
+      <button class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-search"></i>
+      </button>
+    </form>
+  </div>
+
+  <div class="alert alert-light border d-flex align-items-center gap-2 mb-4">
+    <i class="bi bi-calendar-event text-primary"></i>
+    <strong>Date:</strong> {{ date|date:"l, d M Y" }}
+  </div>
+
+  {% if sessions|length == 0 %}
+
+    <div class="card border-0 shadow-sm text-center">
+      <div class="card-body py-5">
+        <div class="fs-1 mb-2"></div>
+        <h5 class="fw-semibold mb-1">No Classes Scheduled</h5>
+        <p class="text-muted mb-3">
+          This day has no sessions assigned.
+        </p>
+
+        <form method="post" action="{% url 'mark_holiday' %}">
+          {% csrf_token %}
+          <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+          <button class="btn btn-warning btn-sm">
+            <i class="bi bi-calendar-x"></i> Mark as Holiday
+          </button>
+        </form>
+      </div>
+    </div>
+
+  {% else %}
+
+  <div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Period</th>
+            <th>Subject</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th class="text-end">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for session in sessions %}
+          <tr>
+
+            <td>
+              {{ session.period }}
+              {% if session.span > 1 %}
+                – {{ session.period|add:session.span|add:"-1" }}
+              {% endif %}
+            </td>
+
+            <td class="fw-medium">
+              {{ session.subject }}
+            </td>
+
+            <td>
+              <span class="badge
+                {% if session.session_type == 'Lab' %}
+                  bg-warning text-dark
+                {% else %}
+                  bg-info
+                {% endif %}
+              ">
+                {{ session.session_type }}
+              </span>
+            </td>
+
+            <td>
+              {% if session.attendance_status %}
+                <span class="badge
+                  {% if session.attendance_status == 'Present' %}
+                    bg-success
+                  {% else %}
+                    bg-danger
+                  {% endif %}
+                ">
+                  {{ session.attendance_status }}
+                </span>
+              {% else %}
+                <span class="text-muted small">
+                  Not Marked
+                </span>
+              {% endif %}
+            </td>
+
+            <td class="text-end">
+              {% if not session.attendance_status %}
+                <form method="post"
+                      action="{% url 'mark_attendance' session.timetable_id %}"
+                      class="d-inline">
+                  {% csrf_token %}
+                  <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+                  <input type="hidden" name="status" value="Present">
+                  <button class="btn btn-success btn-sm">
+                    <i class="bi bi-check-circle"></i> Present
+                  </button>
+                </form>
+
+                <form method="post"
+                      action="{% url 'mark_attendance' session.timetable_id %}"
+                      class="d-inline ms-1">
+                  {% csrf_token %}
+                  <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+                  <input type="hidden" name="status" value="Absent">
+                  <button class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-x-circle"></i> Absent
+                  </button>
+                </form>
+              {% else %}
+                <small class="text-muted">Marked</small>
+              {% endif %}
+            </td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+  {% endif %}
+
+</div>
+{% endblock %}

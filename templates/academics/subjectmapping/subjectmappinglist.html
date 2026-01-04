@@ -1,0 +1,52 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Subject Mapping{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h4>Semester Subject Mapping</h4>
+  <a href="{% url 'subject_semester_create' %}" class="btn btn-primary btn-sm">
+    + Map Subject
+  </a>
+</div>
+
+<form method="get" class="mb-3">
+  <select name="semester" class="form-select w-25" onchange="this.form.submit()">
+    <option value="">All Semesters</option>
+    {% for sem in semesters %}
+      <option value="{{ sem.id }}">{{ sem }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<div class="card shadow-sm">
+<table class="table table-hover mb-0">
+  <thead class="table-light">
+    <tr>
+      <th>Semester</th>
+      <th>Subject</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for map in mappings %}
+    <tr>
+      <td>{{ map.semester }}</td>
+      <td>{{ map.subject }}</td>
+      <td>
+        <span class="badge {% if map.status == 'Active' %}bg-success{% else %}bg-secondary{% endif %}">
+          {{ map.status }}
+        </span>
+      </td>
+      <td class="text-end">
+        <a href="{% url 'subject_semester_update' map.id %}"
+           class="btn btn-outline-secondary btn-sm">Edit</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-center">No mappings</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Authentication{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #0d6efd, #6ea8fe);
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+      padding: 30px;
+    }
+
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .auth-logo i {
+      font-size: 42px;
+      color: #0d6efd;
+    }
+
+    .auth-title {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #6c757d;
+      margin-bottom: 25px;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .btn-primary {
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 500;
+    }
+
+    .auth-footer {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
+    .auth-footer a {
+      text-decoration: none;
+      font-weight: 500;
+    }
+  </style>
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<div class="auth-wrapper">
+
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <i class="bi bi-calendar-check-fill"></i>
+    </div>
+
+    {% block auth_header %}
+      <h4 class="auth-title">Welcome</h4>
+      <p class="auth-subtitle">
+        Sign in to continue to Attendance System
+      </p>
+    {% endblock %}
+
+    {% block content %}{% endblock %}
+
+    {% block auth_footer %}
+    <div class="auth-footer text-muted">
+      © {{ now|date:"Y" }} Attendance System
+    </div>
+    {% endblock %}
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

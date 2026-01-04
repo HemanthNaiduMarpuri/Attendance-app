@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}Attendance Overview{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="mb-4">
+    <h4 class="fw-semibold mb-1">Attendance Overview</h4>
+    <small class="text-muted">
+      Summary of your attendance performance
+    </small>
+  </div>
+
+  {% if error %}
+    <div class="alert alert-danger">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  {% else %}
+
+  <div class="row g-3 mb-4">
+
+    <div class="col-md-2 col-sm-6">
+      <div class="card shadow-sm text-center border-0">
+        <div class="card-body">
+          <small class="text-muted">Total Days</small>
+          <h3 class="fw-bold mt-2">{{ total_days }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-2 col-sm-6">
+      <div class="card shadow-sm text-center border-0">
+        <div class="card-body">
+          <small class="text-muted">Present</small>
+          <h3 class="fw-bold text-success mt-2">{{ present_days }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-2 col-sm-6">
+      <div class="card shadow-sm text-center border-0">
+        <div class="card-body">
+          <small class="text-muted">Absent</small>
+          <h3 class="fw-bold text-danger mt-2">{{ absent_days }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-2 col-sm-6">
+      <div class="card shadow-sm text-center border-0">
+        <div class="card-body">
+          <small class="text-muted">Leave</small>
+          <h3 class="fw-bold text-warning mt-2">{{ leave_days }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <small class="text-muted">Overall Percentage</small>
+          <h2 class="fw-bold text-primary mt-2">
+            {{ percentage }}%
+          </h2>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <div class="progress" style="height: 28px;">
+        <div
+          class="progress-bar fw-semibold
+          {% if percentage < 65 %}
+            bg-danger
+          {% elif percentage < 75 %}
+            bg-warning text-dark
+          {% else %}
+            bg-success
+          {% endif %}"
+          role="progressbar"
+          style="width: {{ percentage }}%">
+          {{ percentage }}%
+        </div>
+      </div>
+
+      {% if attendance_status %}
+      <div class="text-center mt-3">
+        <span class="badge
+          {% if attendance_status == 'Good' %}
+            bg-success
+          {% elif attendance_status == 'Warning' %}
+            bg-warning text-dark
+          {% else %}
+            bg-danger
+          {% endif %}
+        ">
+          {{ attendance_status }}
+        </span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if subject_attendance %}
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h5 class="fw-semibold mb-3">
+        Subject-wise Attendance
+      </h5>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Subject</th>
+              <th>Total</th>
+              <th>Present</th>
+              <th>Absent</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for subject in subject_attendance %}
+            <tr>
+              <td class="fw-medium">{{ subject.subject }}</td>
+              <td>{{ subject.total }}</td>
+              <td class="text-success">{{ subject.present }}</td>
+              <td class="text-danger">{{ subject.absent }}</td>
+              <td>
+                <strong>{{ subject.percentage }}%</strong>
+
+                {% if subject.percentage < 65 %}
+                  <span class="badge bg-danger ms-2">Low</span>
+                {% elif subject.percentage < 75 %}
+                  <span class="badge bg-warning text-dark ms-2">Warning</span>
+                {% else %}
+                  <span class="badge bg-success ms-2">Good</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% endif %}
+</div>
+{% endblock %}
