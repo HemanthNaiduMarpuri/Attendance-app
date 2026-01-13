@@ -1,9 +1,10 @@
-#📊Attendance Management System (Django)
+📊 Attendance Management System (Django)
 
 A modern, role-based Attendance Management System built with Django, featuring a clean UI, calendar-based attendance, role-based access control, and admin dashboards.
 
-#🚀 Features
-#👤 Authentication & Roles
+🚀 Features
+
+👤 Authentication & Roles
 
 User authentication (Login / Signup)
 
