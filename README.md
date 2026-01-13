@@ -82,35 +82,6 @@ Authentication: Django Auth + django-allauth
 
 Version Control: Git & GitHub
 
-📂 Project Structure (Simplified)
-#attendance-app/
-#│
-#├── accounts/
-#│   ├── forms.py
-#│   ├── views.py
-#│   ├── mixins.py
-#│
-#├── academics/
-#│   ├── models.py
-#│   ├── views.py
-#│
-#├── attendance/
-#│   ├── views.py
-#│   ├── templates/
-#│
-#├── templates/
-#│   ├── base.html
-#│   ├── base_auth.html
-#│   ├── login.html
-#│   ├── signup.html
-#│   ├── 403.html
-#│
-#├── static/
-#├── media/
-#├── manage.py
-#├── requirements.txt
-#└── README.md
-
 ⚙️ Setup Instructions
 1️⃣ Clone the Repository
 git clone https://github.com/your-username/Attendance-app.git
